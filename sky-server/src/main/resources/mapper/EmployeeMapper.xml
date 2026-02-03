@@ -20,7 +20,7 @@
     <select id="pageQuery" resultType="com.sky.entity.Employee">
         select * from sky_take_out.employee
         <where>
-            <if test="name != null and name != ''">and name like concat('%',#{name},'%')</if>
+            <if test="name != null and name != ''">name like concat('%',#{name},'%')</if>
         </where>
         order by create_time desc
     </select>
