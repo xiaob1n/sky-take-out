@@ -10,7 +10,10 @@ import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Category;
 import com.sky.entity.Dish;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.CategoryMapper;
+import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.CategoryService;
 import org.springframework.beans.BeanUtils;
@@ -24,9 +27,14 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryMapper categoryMapper;
+    @Autowired
+    private DishMapper dishMapper;
+    @Autowired
+    private SetmealMapper setmealMapper;
 
     /**
      * 分页查询菜品
+     *
      * @param categoryPageQueryDTO
      * @return
      */
@@ -40,6 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     /**
      * 新增菜品分类
+     *
      * @param categoryDTO
      */
     @Override
@@ -56,24 +65,36 @@ public class CategoryServiceImpl implements CategoryService {
 
     /**
      * 禁用，启用菜品分类
+     *
      * @param status
      */
     @Override
-    public void stopOrStart(Integer status,Long id) {
-        categoryMapper.stopOrStart(status,id);
+    public void stopOrStart(Integer status, Long id) {
+        categoryMapper.stopOrStart(status, id);
     }
 
     /**
-     * 根据id删除分类
+     * 根据id删除分类,检查分类是否与菜品、套餐关联
+     *
      * @param id
      */
     @Override
     public void delete(Long id) {
+        Integer count = dishMapper.countByCategoryId(id);
+        if (count > 0) {
+            throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_DISH);
+        }
+
+        count = setmealMapper.countBySetmeal(id);
+        if (count > 0) {
+            throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
+        }
         categoryMapper.delete(id);
     }
 
     /**
      * 根据类型查询分类
+     *
      * @param type
      * @return
      */
@@ -85,6 +106,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     /**
      * 修改分类
+     *
      * @param categoryDTO
      */
     @Override
