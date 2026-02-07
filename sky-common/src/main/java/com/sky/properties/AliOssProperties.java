@@ -2,6 +2,7 @@ package com.sky.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -10,8 +11,7 @@ import org.springframework.stereotype.Component;
 public class AliOssProperties {
 
     private String endpoint;
-    private String accessKeyId;
-    private String accessKeySecret;
+    private String region;
     private String bucketName;
 
 }

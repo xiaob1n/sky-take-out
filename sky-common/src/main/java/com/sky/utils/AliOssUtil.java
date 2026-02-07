@@ -3,10 +3,12 @@ package com.sky.utils;
 import com.aliyun.oss.*;
 import com.aliyun.oss.common.auth.DefaultCredentialProvider;
 import com.aliyun.oss.common.comm.SignVersion;
+import com.sky.properties.AliOssProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.ByteArrayInputStream;
 
@@ -16,8 +18,6 @@ import java.io.ByteArrayInputStream;
 public class AliOssUtil {
 
     private String endpoint = "oss-cn-hangzhou.aliyuncs.com";
-    private String accessKeyId = System.getenv("OSS_ACCESS_KEY_ID");
-    private String accessKeySecret = System.getenv("OSS_ACCESS_KEY_SECRET");
     private String bucketName = "tlias-max2025";
     private String region = "cn-hangzhou";
 
@@ -29,6 +29,9 @@ public class AliOssUtil {
      * @return
      */
     public String upload(byte[] bytes, String objectName) {
+        //从环境变量中获取密钥
+        String accessKeyId = System.getenv("OSS_ACCESS_KEY_ID");
+        String accessKeySecret = System.getenv("OSS_ACCESS_KEY_SECRET");
 
         // 创建凭证提供者
         DefaultCredentialProvider provider = new DefaultCredentialProvider(accessKeyId, accessKeySecret);
@@ -80,12 +83,5 @@ public class AliOssUtil {
         log.info("文件上传到:{}", stringBuilder.toString());
 
         return stringBuilder.toString();
-    }
-
-    public void test(){
-        log.info("endpoint:{}",endpoint);
-        log.info("accessKeyId:{}",accessKeyId);
-        log.info("accessKeySecret:{}",accessKeySecret);
-        log.info("bucketName:{}",bucketName);
     }
 }
