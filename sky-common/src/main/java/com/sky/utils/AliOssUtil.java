@@ -1,23 +1,25 @@
 package com.sky.utils;
 
-import com.aliyun.oss.ClientException;
-import com.aliyun.oss.OSS;
-import com.aliyun.oss.OSSClientBuilder;
-import com.aliyun.oss.OSSException;
+import com.aliyun.oss.*;
+import com.aliyun.oss.common.auth.DefaultCredentialProvider;
+import com.aliyun.oss.common.comm.SignVersion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import java.io.ByteArrayInputStream;
 
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
 @Slf4j
 public class AliOssUtil {
 
-    private String endpoint;
-    private String accessKeyId;
-    private String accessKeySecret;
-    private String bucketName;
+    private String endpoint = "oss-cn-hangzhou.aliyuncs.com";
+    private String accessKeyId = System.getenv("OSS_ACCESS_KEY_ID");
+    private String accessKeySecret = System.getenv("OSS_ACCESS_KEY_SECRET");
+    private String bucketName = "tlias-max2025";
+    private String region = "cn-hangzhou";
 
     /**
      * 文件上传
@@ -28,8 +30,22 @@ public class AliOssUtil {
      */
     public String upload(byte[] bytes, String objectName) {
 
+        // 创建凭证提供者
+        DefaultCredentialProvider provider = new DefaultCredentialProvider(accessKeyId, accessKeySecret);
+
+        // 配置客户端参数
+        ClientBuilderConfiguration clientBuilderConfiguration = new ClientBuilderConfiguration();
+
+        // 显式声明使用V4签名算法
+        clientBuilderConfiguration.setSignatureVersion(SignVersion.V4);
+
         // 创建OSSClient实例。
-        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        OSS ossClient = OSSClientBuilder.create()
+                .credentialsProvider(provider)
+                .clientConfiguration(clientBuilderConfiguration)
+                .region(region)
+                .endpoint(endpoint)
+                .build();
 
         try {
             // 创建PutObject请求。
@@ -64,5 +80,12 @@ public class AliOssUtil {
         log.info("文件上传到:{}", stringBuilder.toString());
 
         return stringBuilder.toString();
+    }
+
+    public void test(){
+        log.info("endpoint:{}",endpoint);
+        log.info("accessKeyId:{}",accessKeyId);
+        log.info("accessKeySecret:{}",accessKeySecret);
+        log.info("bucketName:{}",bucketName);
     }
 }
