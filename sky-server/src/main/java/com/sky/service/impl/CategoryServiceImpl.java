@@ -56,11 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO, category);
         category.setStatus(StatusConstant.ENABLE);
-        category.setUpdateTime(LocalDateTime.now());
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateUser(BaseContext.getCurrentId());
-        category.setCreateUser(BaseContext.getCurrentId());
-        categoryMapper.add(category);
+        categoryMapper.insert(category);
     }
 
     /**
@@ -70,7 +66,8 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public void stopOrStart(Integer status, Long id) {
-        categoryMapper.stopOrStart(status, id);
+        Category category = Category.builder().status(status).id(id).build();
+        categoryMapper.update(category);
     }
 
     /**
