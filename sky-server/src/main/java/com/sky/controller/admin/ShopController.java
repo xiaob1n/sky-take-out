@@ -39,6 +39,6 @@ public class ShopController {
     public Result setStatus(@PathVariable("status") Integer status) {
         log.info("设置营业状态：{}", status);
         shopService.setStatus(status);
-        return Result.success();
+        return Result.success(status);
     }
 }
