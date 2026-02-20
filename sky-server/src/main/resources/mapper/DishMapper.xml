@@ -15,6 +15,8 @@
             <if test="image != null">image = #{image},</if>
             <if test="description != null">description = #{description},</if>
             <if test="status != null">status = #{status},</if>
+            update_time = #{updateTime},
+            update_user = #{updateUser}
         </set>
         where id = #{id}
     </update>
@@ -23,9 +25,9 @@
         d.category_id
         = c.id
         <where>
-            <if test="name != null">name like concat('%',#{name},'%')</if>
-            <if test="categoryId != null">and category_id = #{categoryId}</if>
-            <if test="status != null">and status = #{status}</if>
+            <if test="name != null">d.name like concat('%',#{name},'%')</if>
+            <if test="categoryId != null">and d.category_id = #{categoryId}</if>
+            <if test="status != null">and d.status = #{status}</if>
         </where>
         order by d.create_time desc
     </select>

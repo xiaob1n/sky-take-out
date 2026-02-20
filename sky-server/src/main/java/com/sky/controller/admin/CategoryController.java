@@ -11,6 +11,7 @@ import com.sky.service.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -89,10 +90,10 @@ public class CategoryController {
      */
     @GetMapping("/list")
     @ApiOperation("根据类型查询分类")
-    public Result<List<Category>> getByType(String type){
+    public Result<List<Category>> getByType(Integer type){
         log.info("根据类型查询分类：{}", type);
-        List<Category> category = categoryService.getByType(type);
-        return Result.success(category);
+        List<Category> categories = categoryService.getByType(type);
+        return Result.success(categories);
     }
 
     /**

@@ -53,5 +53,5 @@ public interface DishService {
      * 根据分类id查询菜品
      * @return
      */
-    List<Dish> getByCategoryId(String categoryId);
+    List<DishVO> getByCategoryId(String categoryId);
 }

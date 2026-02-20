@@ -96,7 +96,7 @@ public class CategoryServiceImpl implements CategoryService {
      * @return
      */
     @Override
-    public List<Category> getByType(String type) {
+    public List<Category> getByType(Integer type) {
         List<Category> category = categoryMapper.getByType(type);
         return category;
     }

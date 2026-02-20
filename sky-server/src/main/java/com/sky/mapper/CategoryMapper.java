@@ -43,8 +43,7 @@ public interface CategoryMapper {
      * @param type
      * @return
      */
-    @Select("select * from sky_take_out.category where type = #{type}")
-    List<Category> getByType(String type);
+    List<Category> getByType(Integer type);
 
     /**
      * 修改分类
