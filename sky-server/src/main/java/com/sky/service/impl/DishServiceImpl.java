@@ -150,8 +150,8 @@ public class DishServiceImpl implements DishService {
      * @return
      */
     @Override
-    public List<DishVO> getByCategoryId(String categoryId) {
-        List<Dish> dishes = dishMapper.getByCategoryId(categoryId);
+    public List<DishVO> getByCategoryId(String categoryId, Integer status) {
+        List<Dish> dishes = dishMapper.getByCategoryId(categoryId,status);
         List<DishVO> dishVOS = new ArrayList<>();
         for (Dish dish : dishes) {
             DishVO dishVO = new DishVO();

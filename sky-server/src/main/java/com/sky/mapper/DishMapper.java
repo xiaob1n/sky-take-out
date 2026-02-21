@@ -6,11 +6,9 @@ import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.DishVO;
-import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -70,9 +68,11 @@ public interface DishMapper {
 
     /**
      * 根据分类id查询菜品
+     *
      * @param categoryId
+     * @param status
      * @return
      */
-    @Select("select * from sky_take_out.dish where category_id = #{categoryId}")
-    List<Dish> getByCategoryId(String categoryId);
+    @Select("select * from sky_take_out.dish where category_id = #{categoryId} and status = #{status}")
+    List<Dish> getByCategoryId(String categoryId, Integer status);
 }
