@@ -12,12 +12,14 @@ import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetmealService;
+import com.sky.vo.DishItemVO;
 import com.sky.vo.SetmealVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -136,5 +138,22 @@ public class SetmealServiceImpl implements SetmealService {
             setmealMapper.deleteById(id);
             setmealDishMapper.deleteBySetmealId(Long.parseLong(id));
         }
+    }
+
+    /**
+     * DishItemVO
+     * @param id
+     * @return
+     */
+    @Override
+    public List<DishItemVO> getDishes(Long id) {
+//        List<SetmealDish> dishes = setmealDishMapper.getBySetmealIdWithDescription(id);
+        List<DishItemVO> dishItemVOS = setmealDishMapper.getBySetmealIdWithDescription(id);
+//        for (SetmealDish dish : dishes) {
+//            DishItemVO dishItemVO = new DishItemVO();
+//            BeanUtils.copyProperties(dish,dishItemVO);
+//            dishItemVOS.add(dishItemVO);
+//        }
+        return dishItemVOS;
     }
 }

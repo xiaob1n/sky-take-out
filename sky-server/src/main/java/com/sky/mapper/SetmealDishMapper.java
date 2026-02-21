@@ -1,9 +1,7 @@
 package com.sky.mapper;
 
-import com.sky.annotation.AutoFill;
-import com.sky.entity.Dish;
 import com.sky.entity.SetmealDish;
-import com.sky.enumeration.OperationType;
+import com.sky.vo.DishItemVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -41,6 +39,14 @@ public interface SetmealDishMapper {
      */
     @Delete("delete from sky_take_out.setmeal_dish where setmeal_id = #{setmealId}")
     void deleteBySetmealId(Long setmealId);
+
+    /**
+     * 查询套餐菜品及其及其描述
+     *
+     * @param id
+     * @return
+     */
+    List<DishItemVO> getBySetmealIdWithDescription(Long id);
 
 //    /**
 //     * 根据分类id查询套餐
