@@ -8,6 +8,8 @@ import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
 import com.sky.exception.DeletionNotAllowedException;
+import com.sky.exception.SetmealEnableFailedException;
+import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
@@ -29,6 +31,8 @@ public class SetmealServiceImpl implements SetmealService {
     private SetmealMapper setmealMapper;
     @Autowired
     private SetmealDishMapper setmealDishMapper;
+    @Autowired
+    private DishMapper dishMapper;
 
     /**
      * 根据分类id查询套餐
@@ -84,6 +88,15 @@ public class SetmealServiceImpl implements SetmealService {
      */
     @Override
     public void stopOrStart(String status, Long id) {
+        //检查套餐内菜品是否有未起售的
+        List<SetmealDish> dishes = setmealDishMapper.getBySetmealId(id);
+        for (SetmealDish setmealDish : dishes) {
+            Long dishId = setmealDish.getDishId();
+            Integer dishStatus = dishMapper.getStatusById(dishId);
+            if (dishStatus == 0) {
+                throw new SetmealEnableFailedException(MessageConstant.SETMEAL_ENABLE_FAILED);
+            }
+        }
         Setmeal setmeal = new Setmeal().builder().status(Integer.parseInt(status)).id(id).build();
         setmealMapper.update(setmeal);
     }
