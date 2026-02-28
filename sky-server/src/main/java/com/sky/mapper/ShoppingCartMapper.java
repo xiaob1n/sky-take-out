@@ -35,4 +35,12 @@ public interface ShoppingCartMapper {
      */
     @Delete("delete from sky_take_out.shopping_cart where user_id = #{userId}")
     void delete(Long userId);
+
+    /**
+     * 查询菜品数量
+     * @param userId
+     * @return
+     */
+    @Select("select count(*) from sky_take_out.shopping_cart where user_id = #{userId}")
+    Integer countByUserId(Long userId);
 }

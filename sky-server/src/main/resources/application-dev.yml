@@ -13,3 +13,7 @@ sky:
   wechat:
     appid: wx0391626619565d2d
     secret: dfa2e64ebab8c66f29ed1a70dd33884e
+  shop:
+    address: 丽水市莲都区丽水学院
+  baidu:
+    ak: XxOwxRrwTe05h5Apeb4v6Ko3b3iNFfCW
