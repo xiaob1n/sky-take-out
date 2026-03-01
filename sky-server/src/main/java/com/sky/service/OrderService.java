@@ -69,7 +69,7 @@ public interface OrderService {
     void confirm(OrdersConfirmDTO ordersConfirmDTO);
 
     /**
-     * ordersRejectionDTO
+     * 拒单
      * @param ordersRejectionDTO
      */
     void rejection(OrdersRejectionDTO ordersRejectionDTO);
@@ -93,4 +93,10 @@ public interface OrderService {
     void complete(Long id);
 
     void checkOutOfRange(String address);
+
+    /**
+     * 用户催单
+     * @param id
+     */
+    void reminder(Long id);
 }

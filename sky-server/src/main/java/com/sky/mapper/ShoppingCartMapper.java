@@ -43,4 +43,11 @@ public interface ShoppingCartMapper {
      */
     @Select("select count(*) from sky_take_out.shopping_cart where user_id = #{userId}")
     Integer countByUserId(Long userId);
+
+    /**
+     * 删除购物车中的菜品
+     * @param id
+     */
+    @Delete("delete from sky_take_out.shopping_cart where id = #{id}")
+    void deleteDish(Long id);
 }

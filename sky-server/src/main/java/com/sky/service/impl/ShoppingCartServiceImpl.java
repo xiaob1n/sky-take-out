@@ -90,7 +90,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         List<ShoppingCart> list = shoppingCartMapper.list(shoppingCart);
         BeanUtils.copyProperties(list.get(0), shoppingCart);
         shoppingCart.setNumber(shoppingCart.getNumber() - 1);
-        shoppingCartMapper.updateNumber(shoppingCart);
+        if (shoppingCart.getNumber() <= 0) {
+            shoppingCartMapper.deleteDish(shoppingCart.getId());
+        } else {
+            shoppingCartMapper.updateNumber(shoppingCart);
+        }
     }
 
     /**

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.WebSocket.WebSocketServer;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.*;
@@ -20,6 +21,7 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import io.swagger.util.Json;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +55,8 @@ public class OrderServiceImpl implements OrderService {
     private String shopAddress;
     @Value("${sky.baidu.ak}")
     private String ak;
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     /**
      * 用户下单
@@ -119,7 +123,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) {
         Long userId = BaseContext.getCurrentId();
         User user = userMapper.getById(userId);
-
+        Orders order = orderMapper.getByOrderNumber(ordersPaymentDTO.getOrderNumber());
         //调用微信支付接口
 
         // JSONObject jsonObject = weChatPayUtil.pay(ordersPaymentDTO.getOrderNumber(), new BigDecimal(0.01), "苍穹外卖订单", user.getOpenid());
@@ -133,6 +137,14 @@ public class OrderServiceImpl implements OrderService {
         orderPaymentVO.setPackageStr(jsonObject.getString("package"));
 
         paySuccess(ordersPaymentDTO.getOrderNumber());
+
+        //通过webSocket向后端推送消息
+        Map map = new HashMap();
+        map.put("type",1);
+        map.put("orderId", order.getId());
+        map.put("content", "订单号："+ordersPaymentDTO.getOrderNumber());
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
 
         return orderPaymentVO;
     }
@@ -312,6 +324,24 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(Orders.COMPLETED);
         order.setDeliveryTime(LocalDateTime.now());
         orderMapper.update(order);
+    }
+
+    /**
+     * 用户催单
+     * @param id
+     */
+    @Override
+    public void reminder(Long id) {
+        Orders order = orderMapper.getById(id);
+        if (order == null && order.getStatus().equals(Orders.DELIVERY_IN_PROGRESS)) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        Map map = new HashMap();
+        map.put("type", 2);
+        map.put("orderId", order.getId());
+        map.put("content","订单号："+order.getNumber());
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
     }
 
     /**
