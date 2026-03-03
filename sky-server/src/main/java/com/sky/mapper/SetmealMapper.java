@@ -66,4 +66,12 @@ public interface SetmealMapper {
      */
     @Delete("delete from sky_take_out.setmeal where id = #{id}")
     void deleteById(String id);
+
+    /**
+     * 查询套餐总览
+     *
+     * @return
+     */
+    @Select("select count(*) from sky_take_out.setmeal where status = #{status}")
+    Integer countByStatus(Integer status);
 }

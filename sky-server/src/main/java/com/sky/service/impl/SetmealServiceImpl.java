@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
@@ -15,6 +16,7 @@ import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetmealService;
 import com.sky.vo.DishItemVO;
+import com.sky.vo.SetmealOverViewVO;
 import com.sky.vo.SetmealVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,32 +38,35 @@ public class SetmealServiceImpl implements SetmealService {
 
     /**
      * 根据分类id查询套餐
+     *
      * @param categoryId
      * @return
      */
     @Override
     public List<Setmeal> getByCategoryId(String categoryId) {
         List<Setmeal> setmeals = setmealMapper.getByCategoryId(categoryId);
-        return  setmeals;
+        return setmeals;
     }
 
     /**
      * 套餐分页查询
+     *
      * @param setmealPageQueryDTO
      * @return
      */
     @Override
     public PageResult pageQuery(SetmealPageQueryDTO setmealPageQueryDTO) {
 
-        PageHelper.startPage(setmealPageQueryDTO.getPage(),setmealPageQueryDTO.getPageSize());
+        PageHelper.startPage(setmealPageQueryDTO.getPage(), setmealPageQueryDTO.getPageSize());
         Page<SetmealVO> page = setmealMapper.pageQuery(setmealPageQueryDTO);
         Long total = page.getTotal();
         List<SetmealVO> pageResult = page.getResult();
-        return new PageResult(total,pageResult);
+        return new PageResult(total, pageResult);
     }
 
     /**
      * 新增套餐
+     *
      * @param setmealDTO
      */
     @Override
@@ -69,7 +74,7 @@ public class SetmealServiceImpl implements SetmealService {
     public void add(SetmealDTO setmealDTO) {
         //插入套餐表
         Setmeal setmeal = new Setmeal();
-        BeanUtils.copyProperties(setmealDTO,setmeal);
+        BeanUtils.copyProperties(setmealDTO, setmeal);
         setmealMapper.insert(setmeal);
         Long setmealId = setmeal.getId();
         //插入菜品套餐表
@@ -103,6 +108,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     /**
      * 根据id查询套餐
+     *
      * @param id
      * @return
      */
@@ -111,20 +117,21 @@ public class SetmealServiceImpl implements SetmealService {
         Setmeal setmeal = setmealMapper.getById(id);
         List<SetmealDish> setmealDishes = setmealDishMapper.getBySetmealId(id);
         SetmealVO setmealVO = new SetmealVO();
-        BeanUtils.copyProperties(setmeal,setmealVO);
+        BeanUtils.copyProperties(setmeal, setmealVO);
         setmealVO.setSetmealDishes(setmealDishes);
         return setmealVO;
     }
 
     /**
      * 修改套餐
+     *
      * @param setmealDTO
      */
     @Override
     @Transactional
     public void update(SetmealDTO setmealDTO) {
         Setmeal setmeal = new Setmeal();
-        BeanUtils.copyProperties(setmealDTO,setmeal);
+        BeanUtils.copyProperties(setmealDTO, setmeal);
         setmealMapper.update(setmeal);
         //修改相关菜品
         Long setmealId = setmealDTO.getId();
@@ -138,6 +145,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     /**
      * 批量删除套餐
+     *
      * @param ids
      */
     @Override

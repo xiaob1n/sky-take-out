@@ -75,4 +75,12 @@ public interface DishMapper {
      */
     @Select("select * from sky_take_out.dish where category_id = #{categoryId} and status = #{status}")
     List<Dish> getByCategoryId(String categoryId, Integer status);
+
+    /**
+     * 根据状态查询数量
+     * @param status
+     * @return
+     */
+    @Select("select count(*) from sky_take_out.dish where status = #{status};")
+    Integer countByStatus(Integer status);
 }

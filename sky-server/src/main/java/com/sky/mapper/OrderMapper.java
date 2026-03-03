@@ -125,11 +125,24 @@ public interface OrderMapper {
     @Select("select count(*) from sky_take_out.orders where order_time like concat(#{date},'%') and status = 5;")
     Integer countValidByDate(LocalDate date);
 
+    /**
+     * 统计销量前十的菜品
+     * @param begin
+     * @param end
+     * @return
+     */
     @Select("select od.name,count(od.name) number " +
             "from sky_take_out.order_detail od, " +
             "sky_take_out.orders o " +
-            "where od.order_id = o.id and o.order_time between #{begin} and #{end} " +
+            "where od.order_id = o.id and o.order_time between #{begin} and #{end} and o.status = 5 " +
             "group by od.name " +
             "order by count(od.name) desc;")
     List<GoodsSalesDTO> getTop10(LocalDate begin, LocalDate end);
+
+    /**
+     * 统计订单数
+     * @return
+     */
+    @Select("select count(*) from sky_take_out.orders;")
+    Integer count();
 }
