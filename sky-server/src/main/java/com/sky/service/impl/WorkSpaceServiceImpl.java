@@ -77,16 +77,16 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
      * @return
      */
     @Override
-    public BusinessDataVO businessData() {
-        Integer newUsers = userMapper.countUserByDate(LocalDate.now()) - userMapper.countUserByDate(LocalDate.now().plusDays(-1));
-        Integer validOrderCount = orderMapper.countValidByDate(LocalDate.now());
+    public BusinessDataVO businessData(LocalDate begin, LocalDate end) {
+        Integer newUsers = userMapper.countUserByDate(end) - userMapper.countUserByDate(begin);
+        Integer validOrderCount = orderMapper.countValidByDate(end);
         Double orderCompletionRate = 0.0;
         Double turnover = 0.0;
         Double unitPrice = 0.0;
         if(validOrderCount > 0){
-            orderCompletionRate = validOrderCount * 1.0 / orderMapper.countByDate(LocalDate.now());
-            turnover = orderMapper.sumByDate(LocalDate.now());
-            unitPrice = (double) Math.round(turnover /  orderMapper.countByDate(LocalDate.now()));
+            orderCompletionRate = validOrderCount * 1.0 / orderMapper.countByDate(end);
+            turnover = orderMapper.sumByDate(end);
+            unitPrice = (double) Math.round(turnover /  orderMapper.countByDate((end)));
         }
         BusinessDataVO businessDataVO = BusinessDataVO.builder().turnover(turnover).validOrderCount(validOrderCount).orderCompletionRate(orderCompletionRate).unitPrice(unitPrice).newUsers(newUsers).build();
         return businessDataVO;
